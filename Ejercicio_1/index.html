@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Saludo Component</title>
+</head>
+<body>
+
+<!-- Contenedor para el componente saludo-component -->
+<div id="saludo-container"></div>
+
+<script>
+  // Definir el componente saludo-component
+  class SaludoComponent extends HTMLElement {
+    constructor() {
+      super();
+
+      // Crear un Shadow DOM
+      this.attachShadow({ mode: 'open' });
+
+      // Renderizar el contenido del Shadow DOM
+      this.shadowRoot.innerHTML = `
+        <style>
+          /* Estilos encapsulados para el componente */
+          :host {
+            display: block;
+            text-align: center;
+            padding: 20px;
+            background-color: #0000;
+            color: green;
+            font-family: sans-serif;
+            font-size: 7em;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            box-shadow: 0 0 100px rgba(0, 0, 0, 0.1);
+          }
+        </style>
+        <p>¡Hola, Mundo!</p>
+      `;
+    }
+  }
+
+  // Definir el nuevo elemento personalizado <saludo-component>
+  customElements.define('saludo-component', SaludoComponent);
+
+  // Crear una instancia del componente y agregarla al contenedor
+  const saludoContainer = document.getElementById('saludo-container');
+  const saludoElement = document.createElement('saludo-component');
+  saludoContainer.appendChild(saludoElement);
+</script>
+
+</body>
+</html>

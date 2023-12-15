@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Integración con API Externa</title>
+  
+  <style>
+    #user-list-container {
+      margin-top: 20px;
+    }
+
+    .user-card {
+      border: 1px solid #000;
+      padding: 10px;
+      margin-bottom: 10px;
+    }
+
+    #add-user-btn {
+      margin-top: 10px;
+      padding: 8px;
+      background-color: #4CAF50;
+      color: #000;
+      cursor: pointer;
+      text-align: center  ;
+    }
+    .h1{
+      text-align: center;
+    }
+    body
+    {
+      background: linear-gradient(to right, #4e54c8, #8f94fb);    }
+
+  </style>
+</head>
+<body>
+
+<div id="user-list-container">
+  <h1 class="h1">Lista de Usuarios</h1>
+  <button id="add-user-btn">Agregar Usuario</button>
+  <div id="user-list"></div>
+</div>
+
+<script>
+  async function fetchUserData() {
+    const usersApiUrl = 'https://jsonplaceholder.typicode.com/users';
+
+    try {
+      const response = await fetch(usersApiUrl);
+
+      if (!response.ok) {
+        throw new Error('Error al obtener datos de usuarios');
+      }
+
+      const userData = await response.json();
+      displayUserList(userData);
+    } catch (error) {
+      displayError(error.message);
+    }
+  }
+
+  function displayUserList(users) {
+    const userListContainer = document.getElementById('user-list');
+
+    userListContainer.innerHTML = '';
+
+    users.forEach(user => {
+      const userCard = document.createElement('div');
+      userCard.classList.add('user-card');
+      userCard.innerHTML = `
+        <p><strong>ID:</strong> ${user.id}</p>
+        <p><strong>Nombre:</strong> ${user.name}</p>
+        <p><strong>Email:</strong> ${user.email}</p>
+        <p><strong>Compañía:</strong> ${user.company.name}</p>
+        <p><strong>Ciudad:</strong> ${user.address.city}</p>
+      `;
+      userListContainer.appendChild(userCard);
+    });
+  }
+
+  function displayError(message) {
+    const userListContainer = document.getElementById('user-list');
+    userListContainer.innerHTML = `<p>Error: ${message}</p>`;
+  }
+
+  // Agregar evento al botón para agregar usuario
+  const addUserBtn = document.getElementById('add-user-btn');
+  addUserBtn.addEventListener('click', addUser);
+
+  function addUser() {
+    const newUser = {
+      id: Math.floor(Math.random() * 1000), // Simular un nuevo ID único
+      name: 'Nuevo Usuario',
+      email: 'nuevo@usuario.com',
+    };
+
+    // Obtener la lista actual de usuarios
+    const userListContainer = document.getElementById('user-list');
+    const existingUsers = Array.from(userListContainer.querySelectorAll('.user-card'));
+
+    // Agregar el nuevo usuario al principio de la lista
+    const newUserCard = document.createElement('div');
+    newUserCard.classList.add('user-card');
+    newUserCard.innerHTML = `
+      <p><strong>ID:</strong> ${newUser.id}</p>
+      <p><strong>Nombre:</strong> ${newUser.name}</p>
+      <p><strong>Email:</strong> ${newUser.email}</p>
+    `;
+    userListContainer.insertBefore(newUserCard, existingUsers[0]);
+  }
+
+  fetchUserData();
+</script>
+
+</body>
+</html>
